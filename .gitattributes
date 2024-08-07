@@ -1,0 +1,10 @@
+# Set the default behavior to automatically normalize line endings.
+* text=auto
+
+# Explicitly declare text files to be normalized and converted to LF in the repository.
+*.ts text eol=lf
+*.tsx text eol=lf
+
+# Ensure these file types are treated as binary and are not modified.
+*.jpg binary
+*.png binary
