@@ -8,3 +8,4 @@
 # Ensure these file types are treated as binary and are not modified.
 *.jpg binary
 *.png binary
+*.json text eol=lf

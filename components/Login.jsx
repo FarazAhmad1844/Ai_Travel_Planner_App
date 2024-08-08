@@ -1,30 +1,31 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Colors } from '@/constants/Colors'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {  useRouter } from 'expo-router';
 
 const Login = () => {
+    const router=useRouter();
     return (
+        <GestureHandlerRootView style={{ flex: 1 }}>
         <View
-            style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
+        >
             <Image
                 source={require('./../assets/images/Login.png')}
                 style={{
                     height: 500,
-                    width: 500,      
+                    width: '100%',      
 
                 }} />
             <View
                 style={{
                     marginTop: -20,
-                    width: 400,
-                    height: 450,
-                    borderTopLeftRadius: 40,
-                    borderTopRightRadius: 40,
+                    
+                    borderTopLeftRadius: 23,
+                    borderTopRightRadius: 23,
                     backgroundColor: Colors.white
+                    ,height:500
 
                 }}>
                 <Text
@@ -48,7 +49,7 @@ const Login = () => {
                     Discover Your Next Adventure with AI-Powered Precision , Effortlessly Plan, Book, and Explore with AI-driven Insights!
                 </Text>
 
-                <View
+                <TouchableOpacity
                     style={{
                         marginTop: 50,
                         backgroundColor: Colors.primary,
@@ -66,16 +67,17 @@ const Login = () => {
                             fontSize: 18,
 
 
-                        }}>
-                        Sign In With Google
+                        }}
+                        onPress={() => router.push('/auth/Sign-in')}>   
+                        Sign In With Google 
                     </Text>
-                </View>
+                </TouchableOpacity>
             </View>
 
 
         </View>
 
-
+        </GestureHandlerRootView>
     )
 }
 
