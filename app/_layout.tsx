@@ -21,7 +21,8 @@ import { useEffect } from "react";
       return null; // Or some loading spinner
     }
   return (
-    <Stack>
+    <Stack
+    >
       <Stack.Screen name="index" options={{ headerShown: false }}/>
     </Stack>
   );

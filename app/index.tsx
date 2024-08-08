@@ -3,6 +3,8 @@ import Login from "./../components/Login.jsx";
 export default function Index() {
   return (
     <View
+    style={{
+    }}
     >
       <Login/>
     </View>

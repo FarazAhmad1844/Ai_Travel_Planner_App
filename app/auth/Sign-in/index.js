@@ -1,30 +1,61 @@
 import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useEffect } from 'react'
 import { useNavigation, useRouter } from 'expo-router'
-import { NavigationContainer } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors'
 import { TextInput } from 'react-native-paper'
-
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../../configs/FirebaseConfig';
+import { useEffect, useState } from 'react';
 export default function SignIn() {
   const router=useRouter();
   const navigation = useNavigation();
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  
   useEffect(() => {
     navigation.setOptions(
       {
         headerShown: false
       }
     )
-  }, [])
+  }, []);
+ 
+  
+  const login=()=>{
+    if(email!==""&& password!==""){
+    signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    alert("user signed in")
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+alert(errorMessage)
+  });
+  }else{
+    alert('Enter Email And Password')
+  }
+}
   return (
-    <View
-      style={{
-        padding: 25,
-        marginTop: 60
+    <KeyboardAwareScrollView
+    style={{
+        padding: 20,
+        marginTop: 60,
+        height: '100%',
+        backgroundColor: Colors.white
       }}>
+    <View
+      >
+        <TouchableOpacity
+        onPress={()=>router.back()}>
+        <Ionicons name="arrow-back" size={30} color="black" />
+        </TouchableOpacity>
       <Text
         style={{
           fontFamily: 'outfit-bold',
-          fontSize: 30
+          fontSize: 30,
+          marginTop:15
         }}>
         Let's Sign You In
       </Text>
@@ -62,6 +93,7 @@ export default function SignIn() {
  placeholder='Enter Your FullName'
  mode='outlined'
  activeOutlineColor='#000'
+ onChangeText={(Text) => setEmail(Text)}
 >
 
 </TextInput>
@@ -76,6 +108,7 @@ export default function SignIn() {
  mode='outlined'
  secureTextEntry={true}
  activeOutlineColor='#000'
+ onChangeText={(Text) => setPassword(Text)}
 >
 
 </TextInput>
@@ -92,7 +125,8 @@ export default function SignIn() {
                         borderRadius: 15,
                         justifyContent: 'center',
 
-                    }}>
+                    }}
+                    >
                     <Text
                         style={{
                             color: Colors.white,
@@ -102,8 +136,9 @@ export default function SignIn() {
 
 
                         }}
-                        // onPress={() => router.push('/auth/Sign-in')}
-                        >   
+
+                       
+                       onPress={login} >   
                         Sign In 
                     </Text>
                 </TouchableOpacity>
@@ -138,5 +173,6 @@ export default function SignIn() {
 
 
     </View>
+    </KeyboardAwareScrollView>
   )
 }
