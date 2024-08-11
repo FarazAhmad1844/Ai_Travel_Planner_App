@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Image, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { router, useNavigation } from 'expo-router'
 import { Colors } from '@/constants/Colors'
@@ -28,13 +28,14 @@ export default function SignUp() {
     if(email!==""&& password!==""){
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-   alert("user created")
-    })
+  ToastAndroid.show("Account created successfull",ToastAndroid.BOTTOM)
+  router.replace('/mytrip')   
+})
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      alert(errorMessage)
-      // ..
+      ToastAndroid.show(error.message,ToastAndroid.BOTTOM)
+    
     });
   }
   else{

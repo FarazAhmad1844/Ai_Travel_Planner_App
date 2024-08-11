@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, ToastAndroid } from 'react-native'
 import { useNavigation, useRouter } from 'expo-router'
 import { Colors } from '@/constants/Colors'
 import { TextInput } from 'react-native-paper'
@@ -26,15 +26,16 @@ export default function SignIn() {
     if(email!==""&& password!==""){
     signInWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
-    alert("user signed in")
+    ToastAndroid.show("WELCOME",ToastAndroid.BOTTOM)
+    router.replace('/mytrip')
   })
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
-alert(errorMessage)
+    ToastAndroid.show(error.message,ToastAndroid.BOTTOM)
   });
   }else{
-    alert('Enter Email And Password')
+    ToastAndroid.show("Enter Email and Password",ToastAndroid.BOTTOM)
   }
 }
   return (
