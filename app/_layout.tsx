@@ -23,7 +23,10 @@ import { useEffect } from "react";
   return (
     <Stack
     screenOptions={{
-      headerShown:false
+      headerShown:true,
+      headerTransparent:true,
+      title:""
+
     }}
   
     >

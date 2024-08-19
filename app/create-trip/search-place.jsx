@@ -1,66 +1,96 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useEffect } from 'react'
-import { useNavigation, useRouter } from 'expo-router'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import axios from 'axios';
 
-export default function SearchPlace
-() {
-    const router=useRouter();
-    const navigation =useNavigation();
-    useEffect(() => {
-    navigation.setOptions({
-        headerShown: true,
-    headerTitle: 'Search Place',
-    headerTransparent: true,    
-})
-},[])
+const App = () => {
+  const [query, setQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [placeDetails, setPlaceDetails] = useState(null);
+
+  const geoapifyApiKey = '5a4c8a9dd81e44c8a125381dfb52f924'; // Your Geoapify API key
+
+  const fetchLocations = async (searchQuery) => {
+    try {
+      const response = await axios.get(
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${searchQuery}&apiKey=${geoapifyApiKey}`
+      );
+      console.log('API Response:', response.data);
+      setSuggestions(response.data.features || []); // Ensure default empty array if no features
+    } catch (error) {
+      console.error('Error fetching locations:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  const fetchPlaceDetails = async (placeId) => {
+    try {
+      const response = await axios.get(
+        `https://api.geoapify.com/v2/places/${placeId}?apiKey=${geoapifyApiKey}`
+      );
+      console.log('Place Details:', response.data);
+      setPlaceDetails(response.data);
+    } catch (error) {
+      console.error('Error fetching place details:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (query.length > 2) {
+      fetchLocations(query);
+    }
+  }, [query]);
+
   return (
-    <View
-    style   ={{
-        padding:20,
-        paddingTop:75,
-        backgroundColor:"white",
-        height:'100%'
-    }}>
-     <GooglePlacesAutocomplete
-      placeholder='Search'
-      onPress={(data, details = null) => {
-        // 'details' is provided when fetchDetails = true
-        console.log(data, details);
-      }}
-      query={{
-        key: 'YOUR API KEY',
-        language: 'en',
-      }}
-    />
-
-<TouchableOpacity
-            style={{
-              marginTop: 20,
-              backgroundColor:'#000',
-              height: 50,
-              width:'50%',
-              marginHorizontal: 5,
-              borderRadius: 15,
-              justifyContent: 'center',
-
-            }}>
-            <Text
-              style={{
-                color: 'white',
-                textAlign: 'center',
-                fontFamily: 'outfit-medium',
-                fontSize: 15,
-
-
-              }}
-           onPress={()=>router.push('/create-trip/select-traveler') }
-            >
-        Start a New Trip
+    <View style={styles.container}>
+      <TextInput
+        value={query}
+        onChangeText={setQuery}
+        placeholder="Where do you want to go?"
+        style={styles.input}
+      />
+      <FlatList
+        data={suggestions}
+        keyExtractor={(item) => item.properties.id || item.properties.name} // Ensure unique key
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => fetchPlaceDetails(item.properties.id)}> 
+            <Text style={styles.itemText}>
+              {item.properties.name || 'Unknown'} 
             </Text>
           </TouchableOpacity>
-
-
+        )}
+      />
+      {placeDetails && (
+        <View style={styles.details}>
+          <Text><Text style={styles.label}>Name:</Text> {placeDetails.features[0].properties.name}</Text>
+          <Text><Text style={styles.label}>Address:</Text> {placeDetails.features[0].properties.formatted}</Text>
+          <Text><Text style={styles.label}>Category:</Text> {placeDetails.features[0].properties.category}</Text>
+          {/* Add more details as needed */}
+        </View>
+      )}
     </View>
-  )
-}
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    marginTop:70
+  },
+  input: {
+    borderBottomWidth: 1,
+    marginBottom: 10,
+    fontSize: 16,
+  },
+  itemText: {
+    padding: 10,
+    fontSize: 16,
+  },
+  details: {
+    marginTop: 20,
+  },
+  label: {
+    fontWeight: 'bold',
+  },
+});
+
+export default App;

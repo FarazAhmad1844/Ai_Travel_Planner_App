@@ -1,10 +1,11 @@
-import { View, Text, FlatList } from 'react-native'
-import React from 'react'
-import { useNavigation } from 'expo-router'
+import { View, Text, FlatList, TouchableOpacityBase } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigation, useRouter } from 'expo-router'
 import OptionCard from '../../components/CreateTrip/OptionCard'
+import { TouchableOpacity } from 'react-native'
 
 export default function SelectTraveler() {
- 
+ const router=useRouter();
  const navigation= useNavigation()
  navigation.setOptions({
   headerShown: true,
@@ -12,13 +13,20 @@ export default function SelectTraveler() {
   headerTitle:'',
 
  })
+ const [selectTraveler,setSelectTraveler]=useState(null);
+//  const [tripdata,setTripData]=useContext(CreateTripContext);
+// useEffect(() => {
+//   setTripData(...tripdata,{
+//     traveler:SelectTraveler
+//   })
+// },[selectTraveler])
 
  const list = [
     {
       id:1,
       title: 'Just Me',
       desc: 'A Sole Traveles In Exploration',
-      icon: '🧑🏻‍✈️',
+      icon: '🧑🏻',
       people:"1"
     },
     { id:2,
@@ -31,14 +39,14 @@ export default function SelectTraveler() {
       id:3,
       title: 'Family',
       desc: 'A  Group Of Fun Loving Adventurers',
-      icon: '👨🏻‍👩🏻‍👧🏻‍👧🏻',
+      icon: '🏡',
       people:"3 To 5 People"
     },
     {
       id:4,
       title: 'Friends',
       desc: 'A Bunch of Thrill-Seekes',
-      icon: '',
+      icon: '🚢',
       people:"5 to 10 People"
     }
  
@@ -71,11 +79,36 @@ export default function SelectTraveler() {
   <FlatList
   data={list}
  renderItem={({item,index})=>(
-  <View>
-    <OptionCard option={item}/>
-    </View>
+  <TouchableOpacity
+  onPress={()=>setSelectTraveler(item)}>
+    <OptionCard option={item} selectTraveler={selectTraveler}/>
+    </TouchableOpacity>
  )} 
   />
+  <View>
+    <TouchableOpacity
+    style={{
+      marginTop:0,
+      padding:15,
+      backgroundColor:'#000',
+      borderRadius:15,
+      marginHorizontal:15,
+      marginBottom:50
+
+    }}
+    onPress={()=>router.push('/create-trip/select-dates')}>
+      <Text
+      style ={{
+        color:'white',
+        fontSize:20,
+        textAlign:'center',
+        fontFamily:'outfit-medium'
+      }}>
+Continue
+    </Text>
+
+    </TouchableOpacity>
+  </View>
     </View>
   )
 }

@@ -1,19 +1,19 @@
 import { View, Text } from 'react-native'
-import React from 'react'
 
-export default function OptionCard({ option }) {
+export default function OptionCard({ option ,selectTraveler}) {
+  
     return (
         <View 
-            style={{
-                padding: 15,
+            style={[{
+                padding: 25,
                 display: 'flex',
                 flexDirection:'row',
                 justifyContent:'space-between',
                 backgroundColor: 'lightgrey'
                 ,borderRadius:15,
                 marginTop:20,
-                height:120
-            }}>
+                height:105
+            },selectTraveler?.id==option?.id &&{borderWidth:3}]}>
             <View>
                 <Text
                     style={{
@@ -24,7 +24,7 @@ export default function OptionCard({ option }) {
                      <Text
                     style={{
                         fontFamily: 'outfit',
-                        fontSize: 15,
+                        fontSize: 17,
                         textAlign: 'left',
                         color:'grey'
                     }}>{option.desc}</Text>
